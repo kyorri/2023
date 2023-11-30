@@ -46,3 +46,4 @@ _deps
 
 # Extra
 *.json
+build/
