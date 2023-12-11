@@ -1,0 +1,28 @@
+<App>
+    <Room roomName="kitchen">
+
+        <Device deviceName="ac unit" status="on">
+            <Sensor sensorName="temperature" reading="21.32">
+            <Sensor sensorName="humidity" reading="27.00">
+        </Device>
+
+        <Device deviceName="roomba" status="off">
+            <Sensor sensorName="cliff" reading="0.00">      <!-- 0.00 -> 1.00 (no -> yes) -->
+            <Sensor sensorName="distance" reading="12.37">
+        </Device>
+
+    </Room>
+
+    <Room name="living room">
+
+        <Device deviceName="lights" status="on">
+            <Sensor sensorName="brightness" reading="47.00">
+        </Device>
+        
+        <Device deviceName="fans" status="off">
+            <Sensor sensorName="temperature" reading="18.77">
+        </Device>
+
+    </Room>
+
+</App>
