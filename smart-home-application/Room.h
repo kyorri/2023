@@ -1,21 +1,27 @@
 #ifndef SHA_ROOM_H_
 #define SHA_ROOM_H_
 
-#include <vector>
-#include <string>
 #include "Device.h"
 
+#include <vector>
+#include <string>
+
+namespace smart_home_app {
 class Room {
     public:
         Room(std::string);
 
-        void setRoomName(std::string);
-        std::string getRoomName();
+        void SetRoomName(std::string);
+        std::string GetRoomName();
 
-        std::vector<Device> getDevices();
+        void AddDevice(Device&);
+        void RemoveDevice(Device&);
+
+        std::vector<Device>& GetDevices();
     private:
-        std::string room_name;
-        std::vector<Device> devices;
+        std::string room_name_;
+        std::vector<Device> devices_;
 };
+} // namespace smart_home_app
 
 #endif // SHA_ROOM_H_

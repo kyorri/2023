@@ -3,17 +3,22 @@
 
 #include <string>
 
+namespace smart_home_app {
 class Sensor {
     public:
         Sensor(std::string, double);
 
-        void setSensorName(std::string);
-        std::string getSensorName();
+        void SetSensorType(std::string);
+        std::string GetSensorType();
 
-        void setReading(double);
-        double getReading();
+        bool operator==(Sensor&);
+
+        void SetReading(double);
+        double GetReading();
     private:
-        std::string sensor_name;
-        double reading_value;
+        std::string sensor_type_;
+        double reading_value_;
 };
+} // namespace smart_home_app
+
 #endif // SHA_SENSOR_H_

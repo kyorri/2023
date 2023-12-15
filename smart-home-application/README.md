@@ -9,6 +9,11 @@
 > I have chosen the vector data structure for every part of the application because of the way every part works, the hierarchy of Room <- Devices <- Sensors.
 > Also, the management of the stored info would be easier, just so that I have access to iterators for every vector structure, and easier push/pop operations.
 
-<!---
-to add xml read/write and add/delete objects for final part
--->
+Update
+---
+- changed pull request base to the correct branch - master to master_dmarian
+- modified the code accordingly to the google core guidelines
+- added namespaces and scoping
+- added the rule of 5 in the device class
+- added xml configuration load / save
+- resolved the return by value logic error

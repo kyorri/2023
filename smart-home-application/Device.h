@@ -1,25 +1,37 @@
 #ifndef SHA_DEVICE_H_
 #define SHA_DEVICE_H_
 
-#include <vector>
-#include <string>
 #include "Sensor.h"
 
+#include <vector>
+#include <string>
+
+namespace smart_home_app {
 class Device {
     public:
         Device(std::string, bool);
+        
+        ~Device();
+        Device(const Device&);
+        Device(Device&&);
+        Device& operator=(const Device&);
+        Device& operator=(Device&&);
 
-        void setDeviceName(std::string);
-        std::string getDeviceName();
+        void SetDeviceName(std::string);
+        std::string GetDeviceName();
 
-        void setStatus(bool);
-        bool getStatus();
+        void SetStatus(bool);
+        bool GetStatus();
 
-        std::vector<Sensor> getSensors();
+        void AddSensor(Sensor);
+        void RemoveSensor(Sensor);
+
+        std::vector<Sensor>& GetSensors();
     private:
-        std::string device_name;
-        bool status;
-        std::vector<Sensor> sensors;
+        std::string device_name_;
+        bool status_;
+        std::vector<Sensor> sensors_;
 };
+} // namespace smart_home_app
 
 #endif // SHA_DEVICE_H_

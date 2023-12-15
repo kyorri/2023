@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<Configuration>
+	<Rooms>
+		<Room name="kitchen">
+			<Devices>
+				<Device name="fan" status="true">
+					<Sensors />
+				</Device>
+			</Devices>
+		</Room>
+	</Rooms>
+</Configuration>

@@ -10,4 +10,5 @@ add_executable(exec.out
     Device.cpp
     Room.cpp
     Sensor.cpp
+    pugixml.cpp
     )
