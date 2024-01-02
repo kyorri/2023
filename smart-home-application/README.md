@@ -17,3 +17,20 @@ Update
 - added the rule of 5 in the device class
 - added xml configuration load / save
 - resolved the return by value logic error
+
+Update #2 
+---
+>Patch Notes
+>---
+>- Added static library linking to <i>pugixml</i>;
+>- Added Printer, DevicePrinter and SensorPrinter;
+>- Added new types of Sensors (Temp, Hum and Distance(IR));
+>- Added new types of Devices (AC, Doorbell, Lights);
+
+
+TODO - remaining for this HW
+---
+>- XML Reader/Writer for the app;
+>- Text Reader/Writer;
+>- Repair the functionality of the app (i.e. the Read/Write from XML);
+>- Rule of five for a class (possibly SensorReader getting the vector from a DeviceReader to supply to himself through a constructor);
