@@ -31,6 +31,7 @@ Update #2
 TODO - remaining for this HW
 ---
 >- XML Reader/Writer for the app;
->- Text Reader/Writer;
 >- Repair the functionality of the app (i.e. the Read/Write from XML);
->- Rule of five for a class (possibly SensorReader getting the vector from a DeviceReader to supply to himself through a constructor);
+>- Rule of five for a class;
+
+>- ... Text Reader/Writer, and so on for other ways of serialization;

@@ -50,6 +50,7 @@ namespace smart_home_app {
                 break;
         }
         SetReading(final_value);
+        SetScale(final_scale);
     };
 
 

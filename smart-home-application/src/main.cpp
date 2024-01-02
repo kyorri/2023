@@ -3,31 +3,66 @@
 #include "Device.h"
 #include "Sensor.h"
 
+#include "DevicePrinter.h"
+#include "SensorPrinter.h"
+
+#include "ACUnitDevice.h"
+#include "DoorbellDevice.h"
+
+#include "TemperatureSensor.h"
+#include "HumiditySensor.h"
+#include "DistanceSensor.h"
+
 #include <iostream>
 
 int main()
 {
-    // if (argc == 1)
-    // {
-    //     std::cerr << "No filename chosen!"
-    //                 << std::endl
-    //                 << "Please enter a filename after the executable!"
-    //                 << std::endl;
-    //     return -1;
-    // }
-    // std::string filename = argv[1];
+    smart_home_app::Device* d1; // AC Unit
+    smart_home_app::Device* d2; // Smart Doorbell
+    smart_home_app::Sensor* s1; // Temp Sensor
+    smart_home_app::Sensor* s2; // Distance Sensor
+    smart_home_app::Sensor* s3; // Humidity Sensor
 
-    // smart_home_app::App app(filename);
-    // app.Load();
+    s1 = new smart_home_app::TemperatureSensor;
+    smart_home_app::TemperatureSensor* ts = dynamic_cast<smart_home_app::TemperatureSensor*>(s1);
+    ts->SetScale('f');
+    ts->SetReading(78.23);
+    ts->SetScaleTo('c');
 
-    // smart_home_app::Room room1("kitchen");
-    // smart_home_app::Device dev1("fan", true);
-    // smart_home_app::Sensor sens1("temperature", 24.32), sens2("humidity", 83.00);
-    // app.AddSensorToDevice(dev1, sens1);
-    // app.AddSensorToDevice(dev1, sens2);
-    // app.AddDeviceToRoom(room1, dev1);
-    // app.AddRoom(room1);
+    s2 = new smart_home_app::HumiditySensor;
+    smart_home_app::HumiditySensor* hs = dynamic_cast<smart_home_app::HumiditySensor*>(s2);
+    hs->SetReading(0.57);
+
+    s3 = new smart_home_app::DistanceSensor;
+    smart_home_app::DistanceSensor* ds = dynamic_cast<smart_home_app::DistanceSensor*>(s3);
+    ds->SetReading(0.32);
+    ds->SetUnits("meter(s)");
+
+    d1 = new smart_home_app::ACUnitDevice;
+    smart_home_app::ACUnitDevice* ac = dynamic_cast<smart_home_app::ACUnitDevice*>(d1);
+    ac->TurnOn();
+    ac->AddSensor(s1);
+    ac->AddSensor(s2);
+
+    d2 = new smart_home_app::DoorbellDevice;
+    smart_home_app::DoorbellDevice* db = dynamic_cast<smart_home_app::DoorbellDevice*>(d2);
+    db->SetVisitors(3);
+    db->AddSensor(s1);
+    db->AddSensor(s3);
+
+    smart_home_app::DevicePrinter dp;
+    dp.AddDevice(d1);
+    dp.AddDevice(d2);
+    dp.Print();
     
-    // app.Save();
+    s1->SetReading(23.14);
+    s2->SetReading(0.23);
+    
+    smart_home_app::SensorPrinter sp;
+    sp.AddSensor(s1);
+    sp.AddSensor(s2);
+    sp.AddSensor(s3);
+    sp.Print();
+
     return 0;
 }

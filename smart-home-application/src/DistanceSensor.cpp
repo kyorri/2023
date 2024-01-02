@@ -4,7 +4,7 @@ namespace smart_home_app {
 
     std::string DistanceSensor::GetInfo() {
         std::string message = std::string();
-        message += "This Distance Sensor is reading a distance of " + std::to_string(GetReading()) + " " + GetUnits() + "%!\n";
+        message += "This Distance Sensor is reading a distance of " + std::to_string(GetReading()) + " " + GetUnits() + "!\n";
         return message;
     }; 
 
