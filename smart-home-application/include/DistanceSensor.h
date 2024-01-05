@@ -7,6 +7,7 @@ namespace smart_home_app
 {
 class DistanceSensor : public Sensor {
     public:
+        std::string GetType() override;
         std::string GetInfo() override;
         void SetReading(double) override;
         double GetReading() override;

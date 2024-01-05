@@ -6,6 +6,10 @@
 
 namespace smart_home_app {
 
+    std::string ACUnitDevice::GetType() {
+        return "acunit";
+    }
+
     std::string ACUnitDevice::GetInfo() {
         std::string message = std::string();
         message += "This AC Unit is " + GetStatus() + " and has these sensors attached:\n";

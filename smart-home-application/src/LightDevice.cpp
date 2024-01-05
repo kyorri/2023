@@ -2,8 +2,11 @@
 
 #include <algorithm>
 
-namespace smart_home_app
-{
+namespace smart_home_app {
+
+    std::string LightDevice::GetType() {
+        return "lights";
+    }
 
     std::string LightDevice::GetInfo() {
         std::string message = std::string();

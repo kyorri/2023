@@ -17,16 +17,7 @@ class App {
 
         void Save();
         void Load();
-
-        void AddRoom(Room&);
-        void RemoveRoom(Room&);
-
-        void AddSensorToDevice(Device&, Sensor&);
-        void AddDeviceToRoom(Room&, Device&);
         
-        void RemoveSensorFromDevice(Device&, Sensor&);
-        void RemoveDeviceFromRoom(Room&, Device&);
-
         std::vector<Room>& GetRooms();
     private:
         std::string filename_;

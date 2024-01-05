@@ -33,6 +33,11 @@ add_executable(exec.out
     src/SensorPrinter.cpp
     src/DevicePrinter.cpp
 
+    src/Reader.cpp
+    src/XMLReader.cpp
+
+    src/Writer.cpp
+    src/XMLWriter.cpp
     )
 
 target_link_libraries(exec.out PRIVATE pugixml)

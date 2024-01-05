@@ -18,20 +18,15 @@ Update
 - added xml configuration load / save
 - resolved the return by value logic error
 
-Update #2 
+Update #2 (HW5)
 ---
->Patch Notes
->---
->- Added static library linking to <i>pugixml</i>;
+>- Added static library linking to pugixml;
 >- Added Printer, DevicePrinter and SensorPrinter;
 >- Added new types of Sensors (Temp, Hum and Distance(IR));
 >- Added new types of Devices (AC, Doorbell, Lights);
 
-
-TODO - remaining for this HW
+Update #3 (HW5)
 ---
 >- XML Reader/Writer for the app;
->- Repair the functionality of the app (i.e. the Read/Write from XML);
->- Rule of five for a class;
-
->- ... Text Reader/Writer, and so on for other ways of serialization;
+>- Rule of five for the Room class;
+>- Repaired the functionality of the app (i.e. the Read/Write from XML);

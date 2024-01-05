@@ -1,4 +1,4 @@
-#include "App.h"
+
 #include "Room.h"
 #include "Device.h"
 #include "Sensor.h"
@@ -13,7 +13,11 @@
 #include "HumiditySensor.h"
 #include "DistanceSensor.h"
 
+#include "XMLReader.h"
+#include "XMLWriter.h"
+
 #include <iostream>
+#include <vector>
 
 int main()
 {
@@ -27,7 +31,7 @@ int main()
     smart_home_app::TemperatureSensor* ts = dynamic_cast<smart_home_app::TemperatureSensor*>(s1);
     ts->SetScale('f');
     ts->SetReading(78.23);
-    ts->SetScaleTo('c');
+    ts->SetScaleTo('k');
 
     s2 = new smart_home_app::HumiditySensor;
     smart_home_app::HumiditySensor* hs = dynamic_cast<smart_home_app::HumiditySensor*>(s2);
@@ -53,16 +57,29 @@ int main()
     smart_home_app::DevicePrinter dp;
     dp.AddDevice(d1);
     dp.AddDevice(d2);
-    dp.Print();
+    //dp.Print();
     
-    s1->SetReading(23.14);
     s2->SetReading(0.23);
     
     smart_home_app::SensorPrinter sp;
     sp.AddSensor(s1);
     sp.AddSensor(s2);
     sp.AddSensor(s3);
-    sp.Print();
+    // sp.Print();
+
+    smart_home_app::XMLWriter xmlw;
+
+    smart_home_app::Room r("kitchen");
+    r.AddDevice(d1);
+    r.AddDevice(d2);
+    xmlw.AddRoom(r);
+    xmlw.Write("test.xml");
+
+    delete ts;
+    delete hs;
+    delete ds;
+    delete ac;
+    delete db;
 
     return 0;
 }

@@ -8,6 +8,7 @@
 namespace smart_home_app {
 class TemperatureSensor : public Sensor {
     public:
+        std::string GetType() override;
         std::string GetInfo() override;
         void SetReading(double) override;
         double GetReading() override;

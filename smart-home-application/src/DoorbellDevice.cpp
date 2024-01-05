@@ -6,6 +6,10 @@
 
 namespace smart_home_app {
 
+    std::string DoorbellDevice::GetType() {
+        return "doorbell";
+    }
+
     std::string DoorbellDevice::GetInfo() {
         std::string message = std::string();
         message += "This Doorbell is " + GetStatus() + ", had " + std::to_string(GetVisitors()) + " today, and has these sensors attached:\n";

@@ -2,6 +2,10 @@
 
 namespace smart_home_app {
 
+    std::string HumiditySensor::GetType() {
+        return "hum";
+    };
+
     std::string HumiditySensor::GetInfo() {
         std::string message = std::string();
         message += "This Humidity Sensor is reading a humidity level of " + std::to_string(GetPercent()) + "%!\n";
