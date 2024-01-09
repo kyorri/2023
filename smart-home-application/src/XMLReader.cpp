@@ -29,7 +29,7 @@ namespace smart_home_app {
                 std::string device_status = device_node.attribute("status").value();
 
                 if (device_type == "acunit") {
-
+                    // Write derived info in case of extension for acunit
                 }
                 else if (device_type == "doorbell") {
                     std::string visitors = device_node.attribute("visitors").value();
@@ -52,7 +52,7 @@ namespace smart_home_app {
                         ts->SetScale(*scale.c_str());
                     }
                     else if (sensor_type == "hum") {
-
+                        // Write derived attributes in case of extension of hum
                     }
                     else if (sensor_type == "dist") {
                         std::string unit = sensor_node.attribute("unit").value();

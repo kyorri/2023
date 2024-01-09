@@ -38,6 +38,8 @@ add_executable(exec.out
 
     src/Writer.cpp
     src/XMLWriter.cpp
+
+    src/UniquePointer.cpp
     )
 
 target_link_libraries(exec.out PRIVATE pugixml)
