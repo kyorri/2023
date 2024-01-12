@@ -29,10 +29,8 @@ namespace smart_home_app {
     }
 
     void TemperatureSensor::SetScaleTo(char initial_scale, char final_scale) {
-        double celsius_value;
-        double final_value;
-        celsius_value = 0.0;
-        final_value = 0.0;
+        double celsius_value = 0.0;
+        double final_value = 0.0;
         switch (initial_scale) {
             case 'c':
                 celsius_value = GetReading();

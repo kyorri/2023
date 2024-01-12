@@ -3,7 +3,6 @@
 
 #include "Device.h"
 
-
 #include <vector>
 #include <string>
 

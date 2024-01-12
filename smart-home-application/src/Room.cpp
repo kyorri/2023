@@ -25,8 +25,10 @@ namespace smart_home_app {
     Room::Room(Room&& other) : room_name_(std::move(other.room_name_)), devices_(std::move(other.devices_)) {};
 
     Room& Room::operator=(Room&& other) {
-        room_name_ = std::move(other.room_name_);
-        devices_ = std::move(other.devices_);
+        if (!(other == *this)) {
+            room_name_ = std::move(other.room_name_);
+            devices_ = std::move(other.devices_);
+        }
         return *this;
     };
 

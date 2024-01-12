@@ -19,27 +19,20 @@ add_executable(exec.out
     src/App.cpp
     src/Room.cpp
 
-    src/Device.cpp
     src/ACUnitDevice.cpp
     src/DoorbellDevice.cpp
     src/LightDevice.cpp
 
-    src/Sensor.cpp
     src/TemperatureSensor.cpp
     src/HumiditySensor.cpp
     src/DistanceSensor.cpp
     
-    src/Printer.cpp
     src/SensorPrinter.cpp
     src/DevicePrinter.cpp
 
-    src/Reader.cpp
     src/XMLReader.cpp
 
-    src/Writer.cpp
     src/XMLWriter.cpp
-
-    src/UniquePointer.cpp
     )
 
 target_link_libraries(exec.out PRIVATE pugixml)
