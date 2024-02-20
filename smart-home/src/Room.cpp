@@ -3,57 +3,73 @@
 #include <vector>
 #include <algorithm>
 
-namespace smart_home_app {
-    Room::Room(std::string room_name) : room_name_(room_name) {};
+namespace smart_home {
+    Room::Room(std::string room_name) : name_(room_name) {};
 
     Room::~Room() {
-        for (Device* d : devices_) {
-            delete d;
-        }
         devices_.clear();
     };
 
-    Room::Room(const Room& other) : room_name_(other.room_name_), devices_(other.devices_) {};
+    Room::Room(const Room& other) : name_(other.name_), devices_(other.devices_) {};
 
     Room& Room::operator=(const Room& other) {
         Room tmp(other);
-        std::swap(room_name_, tmp.room_name_);
+        std::swap(name_, tmp.name_);
         std::swap(devices_, tmp.devices_);
         return *this;
     };
     
-    Room::Room(Room&& other) : room_name_(std::move(other.room_name_)), devices_(std::move(other.devices_)) {};
+    Room::Room(Room&& other) : name_(std::move(other.name_)), devices_(std::move(other.devices_)) {};
 
     Room& Room::operator=(Room&& other) {
         if (!(other == *this)) {
-            room_name_ = std::move(other.room_name_);
+            name_ = std::move(other.name_);
             devices_ = std::move(other.devices_);
         }
         return *this;
     };
 
-    void Room::SetRoomName(std::string room_name) {
-        room_name_ = room_name;
+    void Room::AddDevice(std::shared_ptr<Device>& p) {
+        try {
+            auto it = std::find_if(devices_.begin(), devices_.end(), 
+                [&p](const std::shared_ptr<Device>& device) {
+                    return device.get() == p.get();
+                });
+            if (it == devices_.end()) {
+                devices_.emplace_back(std::move(p));
+            }
+            else {
+                throw std::runtime_error("This sensor is already assigned to this speaker!");
+            }
+        }
+        catch(const std::exception& e) {
+            std::cerr << e.what() << std::endl;
+        }
     };
 
-    std::string Room::GetRoomName() {
-        return room_name_;
-    };
-
-    void Room::AddDevice(Device* new_device) {
-        devices_.push_back(new_device);
-    };
-
-    void Room::RemoveDevice(Device* rem_device) {
-        auto it = std::find(devices_.begin(), devices_.end(), rem_device);
-        devices_.erase(it);
+    void Room::RemoveDevice(std::shared_ptr<Device>& p) {
+        devices_.erase(
+            std::remove_if(devices_.begin(), devices_.end(),
+                [&p](const std::shared_ptr<Device>& device) {
+                    return device.get() == p.get();
+                }),
+            devices_.end()
+        );
     };
 
     bool Room::operator==(const Room& other) {
-        return ((this->devices_ == other.devices_) && (this->room_name_ == other.room_name_));
+        return ((this->devices_ == other.devices_) && (this->name_ == other.name_));
     }
 
-    std::vector<Device*> Room::GetDevices() {
+    void Room::SetName(std::string room_name) {
+        name_ = room_name;
+    };
+
+    std::string Room::GetName() {
+        return name_;
+    };
+
+    std::vector<std::shared_ptr<Device>> Room::GetDevices() {
         return devices_;
     };
     

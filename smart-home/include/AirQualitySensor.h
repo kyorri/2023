@@ -1,16 +1,18 @@
-#ifndef SH_TEMPERATURESENSOR_INCLUDE_H_
-#define SH_TEMPERATURESENSOR_INCLUDE_H_
+#ifndef SH_AIRQUALITYSENSOR_INCLUDE_H_
+#define SH_AIRQUALITYSENSOR_INCLUDE_H_
 
 #include "Sensor.h"
+#include "AirQualityLevel.h"
+#include "AirQualityLevelMessage.h"
 
 namespace smart_home {
-class TemperatureSensor : public Sensor {
+class AirQualitySensor : public Sensor {
     public:
-        TemperatureSensor();
-        TemperatureSensor(double);
+        AirQualitySensor();
+        AirQualitySensor(double);
 
         void Interact() override;
-
+        
         void Wait() override;
         void Continue() override;
         void TurnOn() override;
@@ -21,11 +23,15 @@ class TemperatureSensor : public Sensor {
 
         double GetReading() override;
         void SetReading(double) override;
+
+        AirQualityLevel GetAirQualityLevel();
+
     private:
         SensorStatus status_;
         double reading_;
+        AirQualityLevel air_quality_lvl_;
 
 };
 } // namespace smart_home
 
-#endif  // SH_TEMPERATURESENSOR_INCLUDE_H_
+#endif  // SH_AIRQUALITYSENSOR_INCLUDE_H_

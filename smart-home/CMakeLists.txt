@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.12)
+project(SmartHome LANGUAGES CXX)
 
-
-project(smart-home-application)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/include
@@ -9,30 +10,39 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/pugixml
 )
 
-add_library(pugixml STATIC
-    pugixml/pugixml.cpp
-    )
+add_library(pugixml STATIC pugixml/pugixml.cpp)
 
-add_executable(exec.out
-    src/main.cpp
+add_executable(exec.out src/_main.cpp
+                        src/App.cpp
+                        src/Room.cpp
 
-    src/App.cpp
-    src/Room.cpp
+                        # Devices
+                        src/ACUnitDevice.cpp
+                        src/SpeakerDevice.cpp
+                        src/ThermostatDevice.cpp
 
-    src/ACUnitDevice.cpp
-    src/DoorbellDevice.cpp
-    src/LightDevice.cpp
+                        # Sensors
+                        src/TemperatureSensor.cpp
+                        src/HumiditySensor.cpp
+                        src/AirQualitySensor.cpp
 
-    src/TemperatureSensor.cpp
-    src/HumiditySensor.cpp
-    src/DistanceSensor.cpp
-    
-    src/SensorPrinter.cpp
-    src/DevicePrinter.cpp
+                        # Utility classes
+                        src/DeviceFactory.cpp
 
-    src/XMLReader.cpp
+                        src/DeviceStatusMessage.cpp
+                        src/SensorStatusMessage.cpp
+                        src/AirQualityLevelMessage.cpp
 
-    src/XMLWriter.cpp
-    )
+                        # Printers for status of devices
+                        src/ACUnitDevicePrinter.cpp
+
+                        # Readers
+                        src/ACUnitDeviceReader.cpp
+                        src/SpeakerDeviceReader.cpp
+                        src/ThermostatDeviceReader.cpp
+
+                        # Writers
+
+                        )
 
 target_link_libraries(exec.out PRIVATE pugixml)

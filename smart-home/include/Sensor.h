@@ -1,16 +1,31 @@
-#ifndef SHA_SENSOR_H_
-#define SHA_SENSOR_H_
+#ifndef SH_SENSOR_INCLUDE_H_
+#define SH_SENSOR_INCLUDE_H_
 
-#include <string>
+#include "SensorStatus.h"
 
-namespace smart_home_app {
+#include <iostream>
+#include <vector>
+#include <memory>
+
+namespace smart_home {
 class Sensor {
     public:
-        virtual std::string GetType() = 0;
-        virtual std::string GetInfo() = 0;
-        virtual void SetReading(double) = 0;
-        virtual double GetReading() = 0;
-};
-} // namespace smart_home_app
+        virtual void Interact() = 0;
 
-#endif // SHA_SENSOR_H_
+        virtual void Wait() = 0;
+        virtual void Continue() = 0;
+        virtual void TurnOn() = 0;
+        virtual void TurnOff() = 0;
+
+        virtual SensorStatus GetStatus() = 0;
+        virtual void SetStatus(SensorStatus) = 0;
+
+        virtual double GetReading() = 0;
+        virtual void SetReading(double) = 0;
+    // protected:
+    //     SensorStatus status_;
+    //     double reading_;
+};
+} // namespace smart_home
+
+#endif  // SH_SENSOR_INCLUDE_H_

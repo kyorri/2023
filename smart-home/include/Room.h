@@ -1,12 +1,13 @@
-#ifndef SHA_ROOM_H_
-#define SHA_ROOM_H_
+#ifndef SH_ROOM_INCLUDE_H_
+#define SH_ROOM_INCLUDE_H_
 
+#include "Sensor.h"
 #include "Device.h"
 
 #include <vector>
-#include <string>
+#include <memory>
 
-namespace smart_home_app {
+namespace smart_home {
 class Room {
     public:
         Room(std::string);
@@ -18,19 +19,19 @@ class Room {
         Room(Room&&);
         Room& operator=(Room&&);
 
-        void SetRoomName(std::string);
-        std::string GetRoomName();
+        void SetName(std::string);
+        std::string GetName();
 
-        void AddDevice(Device*);
-        void RemoveDevice(Device*);
+        void AddDevice(std::shared_ptr<Device>&);
+        void RemoveDevice(std::shared_ptr<Device>&);
 
         bool operator==(const Room&);
 
-        std::vector<Device*> GetDevices();
+        std::vector<std::shared_ptr<Device>> GetDevices();
     private:
-        std::string room_name_;
-        std::vector<Device*> devices_;
+        std::vector<std::shared_ptr<Device>> devices_;
+        std::string name_;
 };
-} // namespace smart_home_app
+} // namespace smart_home
 
-#endif // SHA_ROOM_H_
+#endif  // SH_ROOM_INCLUDE_H_

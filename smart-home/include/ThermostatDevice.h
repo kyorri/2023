@@ -1,13 +1,14 @@
-#ifndef SH_ACUNITDEVICE_INCLUDE_H_
-#define SH_ACUNITDEVICE_INCLUDE_H_
+#ifndef SH_THERMOSTATDEVICE_INCLUDE_H_
+#define SH_THERMOSTATDEVICE_INCLUDE_H_
 
 #include "Device.h"
-#include "ACHeatingStatus.h"
+#include "TemperatureSensor.h"
 
 namespace smart_home {
-class ACUnitDevice : public Device {
+class ThermostatDevice : public Device {
     public:
-        ACUnitDevice();
+        ThermostatDevice();
+        ThermostatDevice(const TemperatureSensor);
 
         void Interact() override;
 
@@ -23,17 +24,16 @@ class ACUnitDevice : public Device {
         void AddSensor(std::shared_ptr<Sensor>) override;
         void RemoveSensor(std::shared_ptr<Sensor>) override;
 
-        ACHeatingStatus GetHeatingStatus();
-        void StartHeating();
-        void StopHeating();
-        void StartCooling();
-        void StopCooling();
-
+        double GetTargetTemperature();
+        double GetTemperature();
+        void SetTargetTemperature(double);
+        void SetTemperature(double);
     private:
         DeviceStatus status_;
-        std::vector<std::shared_ptr<Sensor>> sensors_;
+        std::vector<std::shared_ptr<Sensor>> sensors_;\
         DeviceType device_type_;
-        ACHeatingStatus heating_status_;
+        double target_temp_;
+        double temperature_;
 };
 } // namespace smart_home
-#endif  // SH_ACUNITDEVICE_INCLUDE_H_
+#endif  // SH_THERMOSTATDEVICE_INCLUDE_H_

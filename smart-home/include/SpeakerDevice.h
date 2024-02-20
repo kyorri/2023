@@ -1,13 +1,12 @@
-#ifndef SH_ACUNITDEVICE_INCLUDE_H_
-#define SH_ACUNITDEVICE_INCLUDE_H_
+#ifndef SH_SPEAKERDEVICE_INCLUDE_H__
+#define SH_SPEAKERDEVICE_INCLUDE_H__
 
 #include "Device.h"
-#include "ACHeatingStatus.h"
 
 namespace smart_home {
-class ACUnitDevice : public Device {
+class SpeakerDevice : public Device {
     public:
-        ACUnitDevice();
+        SpeakerDevice();
 
         void Interact() override;
 
@@ -23,17 +22,13 @@ class ACUnitDevice : public Device {
         void AddSensor(std::shared_ptr<Sensor>) override;
         void RemoveSensor(std::shared_ptr<Sensor>) override;
 
-        ACHeatingStatus GetHeatingStatus();
-        void StartHeating();
-        void StopHeating();
-        void StartCooling();
-        void StopCooling();
-
+        double GetVolume();
+        void SetVolume(double);
     private:
         DeviceStatus status_;
         std::vector<std::shared_ptr<Sensor>> sensors_;
         DeviceType device_type_;
-        ACHeatingStatus heating_status_;
+        double volume_;
 };
 } // namespace smart_home
-#endif  // SH_ACUNITDEVICE_INCLUDE_H_
+#endif  // SH_SPEAKERDEVICE_INCLUDE_H__

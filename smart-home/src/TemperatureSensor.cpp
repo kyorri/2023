@@ -1,80 +1,96 @@
 #include "TemperatureSensor.h"
+#include "SensorStatusMessage.h"
 
-#include <ctype.h>
+namespace smart_home {
+TemperatureSensor::TemperatureSensor() : status_(SensorStatus::Off), reading_(0.0) {};
 
-namespace smart_home_app {
+TemperatureSensor::TemperatureSensor(double reading) : status_(SensorStatus::Off), reading_(reading) {};
 
-    std::string TemperatureSensor::GetType() {
-        return "temp";
-    };
+void TemperatureSensor::Interact() {
+    SensorStatusMessage ssm(status_);
+    std::cout << "This Temperature sensor is in the state of " << ssm.GetStatus() << ", and is indicating a temperature of " << reading_ << " degrees Celsius!" << std::endl;
+};
 
-    std::string TemperatureSensor::GetInfo() {
-        std::string message = std::string();
-        message += "This Temperature Sensor is reading " + std::to_string(GetReading()) + " degrees " + GetScale() + "!\n";
-        return message;
-    };
+SensorStatus TemperatureSensor::GetStatus() {
+    return status_;
+};
 
+void TemperatureSensor::SetStatus(SensorStatus new_status) {
+    status_ = new_status;
+};
 
-    void TemperatureSensor::SetReading(double new_reading) {
-        reading_ = new_reading;
-    };
+double TemperatureSensor::GetReading() {
+    return reading_;
+};
 
+void TemperatureSensor::SetReading(double new_reading) {
+    reading_ = new_reading;
+};
 
-    double TemperatureSensor::GetReading() {
-        return reading_;
-    };
+void TemperatureSensor::Wait() {
+    try {
+        switch (status_) {
+            case SensorStatus::Standby:
+                // do nothing, we still are in standby
+                break;
 
-    void TemperatureSensor::SetScale(char scale) {
-        scale_ = tolower(scale);
+            case SensorStatus::Active:
+                SetStatus(SensorStatus::Standby);
+                break;
+
+            default:
+                SensorStatusMessage dvm(status_);
+                std::string message = dvm.GetStatus();
+                throw std::logic_error("This Temperature sensor cannot wait because we are in the \"" + message + "\" state!");
+                break;
+        }
     }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
+};
 
-    void TemperatureSensor::SetScaleTo(char initial_scale, char final_scale) {
-        double celsius_value = 0.0;
-        double final_value = 0.0;
-        switch (initial_scale) {
-            case 'c':
-                celsius_value = GetReading();
+void TemperatureSensor::Continue() {
+    try {
+        switch (status_) {
+            case (SensorStatus::Active):
+                // do nothing, we still are active
                 break;
-            case 'f':
-                celsius_value = (GetReading() - 32.0) / 1.8;
+
+            case (SensorStatus::Standby):
+                SetStatus(SensorStatus::Active);
                 break;
-            case 'k':
-                celsius_value = GetReading() - 273.15;
-                break;
-        }
-        switch (final_scale) {
-            case 'c':
-                final_value = celsius_value;
-                break;
-            case 'f':
-                final_value = celsius_value * 1.8 + 32.0;
-                break;
-            case 'k':
-                final_value = celsius_value + 273.15;
+                
+            default:
+                SensorStatusMessage dvm(status_);
+                std::string message = dvm.GetStatus();
+                throw std::logic_error("This Temperature sensor cannot continue because we are in the \"" + message + "\" state!");
                 break;
         }
-        SetReading(final_value);
-        SetScale(final_scale);
-    };
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
+};
 
-
-    void TemperatureSensor::SetScaleTo(char new_scale) {
-        SetScaleTo(scale_, new_scale);
-    };
-
-
-    std::string TemperatureSensor::GetScale() {
-        char scale = tolower(scale_);
-        if (scale == 'c') {
-            return "Celsius";
+void TemperatureSensor::TurnOn() {
+    try {
+        switch (status_) {
+            case SensorStatus::Off:
+                SetStatus(SensorStatus::Active);
+                break;
+                
+            default:
+                throw std::logic_error("Cannot turn on the Temperature sensor! (have you tried to turn it off and on?)");
+                break;
         }
-        else if (scale == 'k') {
-            return "Kelvin";
-        }
-        else if (scale == 'f') {
-            return "Fahrenheit";
-        }
-        return ""; 
-    };
+    }
+    catch(std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
+};
 
-} // namespace smart_home_app
+void TemperatureSensor::TurnOff() {
+    status_ = SensorStatus::Off;
+};
+} // namespace smart_home

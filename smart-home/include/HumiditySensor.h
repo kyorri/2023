@@ -1,22 +1,33 @@
-#ifndef SHA_HUMIDITYSENSOR_H_
-#define SHA_HUMIDITYSENSOR_H_
+#ifndef SH_HUMIDITYSENSOR_INCLUDE_H_
+#define SH_HUMIDITYSENSOR_INCLUDE_H_
 
 #include "Sensor.h"
 
-#include <string>
-
-namespace smart_home_app {
+namespace smart_home {
 class HumiditySensor : public Sensor {
     public:
-        std::string GetType() override;
-        std::string GetInfo() override;
-        void SetReading(double) override;
+        HumiditySensor();
+        HumiditySensor(double);
+
+        void Interact() override;
+
+        void Wait() override;
+        void Continue() override;
+        void TurnOn() override;
+        void TurnOff() override;
+
+        SensorStatus GetStatus() override;
+        void SetStatus(SensorStatus) override;
+
         double GetReading() override;
+        void SetReading(double) override;
 
-        uint32_t GetPercent();
+        int GetPercent();
     private:
+        SensorStatus status_;
         double reading_;
-};
-} // namespace smart_home_app
 
-#endif // SHA_HUMIDITYSENSOR_H_
+};
+} // namespace smart_home
+
+#endif  // SH_HUMIDITYSENSOR_INCLUDE_H_
