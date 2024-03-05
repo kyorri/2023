@@ -2,6 +2,7 @@
 #define SH_SENSOR_INCLUDE_H_
 
 #include "SensorStatus.h"
+#include "SensorType.h"
 
 #include <iostream>
 #include <vector>
@@ -22,6 +23,8 @@ class Sensor {
 
         virtual double GetReading() = 0;
         virtual void SetReading(double) = 0;
+
+        virtual SensorType GetSensorType() = 0;
     // protected:
     //     SensorStatus status_;
     //     double reading_;

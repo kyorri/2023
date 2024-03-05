@@ -21,10 +21,12 @@ class HumiditySensor : public Sensor {
 
         double GetReading() override;
         void SetReading(double) override;
-
         int GetPercent();
+
+        SensorType GetSensorType();
     private:
         SensorStatus status_;
+        SensorType sensor_type_;
         double reading_;
 
 };

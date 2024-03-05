@@ -31,7 +31,7 @@ void ACUnitDevicePrinter::Print(Device* device) {
         }
         else {
             std::cout<< "> This Air Conditioning unit has " << ac->GetSensors().size() << " sensor(s):" << std::endl;
-            for (auto s : ac->GetSensors()) {
+            for (const auto& s : ac->GetSensors()) {
                 std::cout << " -";
                 s->Interact();
             }

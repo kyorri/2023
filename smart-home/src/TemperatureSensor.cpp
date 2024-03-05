@@ -2,7 +2,7 @@
 #include "SensorStatusMessage.h"
 
 namespace smart_home {
-TemperatureSensor::TemperatureSensor() : status_(SensorStatus::Off), reading_(0.0) {};
+TemperatureSensor::TemperatureSensor() : status_(SensorStatus::Off), reading_(0.0), sensor_type_(SensorType::Temperature) {};
 
 TemperatureSensor::TemperatureSensor(double reading) : status_(SensorStatus::Off), reading_(reading) {};
 
@@ -93,4 +93,8 @@ void TemperatureSensor::TurnOn() {
 void TemperatureSensor::TurnOff() {
     status_ = SensorStatus::Off;
 };
+
+SensorType TemperatureSensor::GetSensorType() {
+    return sensor_type_;
+}
 } // namespace smart_home

@@ -4,6 +4,7 @@
 #include "Sensor.h"
 #include "DeviceStatus.h"
 #include "DeviceType.h"
+#include "unique_ptr.h"
 
 #include <iostream>
 #include <vector>
@@ -22,9 +23,11 @@ class Device {
         virtual DeviceStatus GetStatus() = 0;
         virtual void SetStatus(DeviceStatus) = 0;
 
-        virtual std::vector<std::shared_ptr<Sensor>> GetSensors() = 0;
-        virtual void AddSensor(std::shared_ptr<Sensor>) = 0;
-        virtual void RemoveSensor(std::shared_ptr<Sensor>) = 0;
+        virtual std::vector<Sensor*> GetSensors() = 0;
+        virtual void AddSensor(antoniaptr::unique_ptr<Sensor>) = 0;
+        virtual void RemoveSensor(int) = 0;
+
+        virtual DeviceType GetDeviceType() = 0;
     // protected:
     //     DeviceStatus status_;
     //     std::vector<std::shared_ptr<Sensor>> sensors_;

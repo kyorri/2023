@@ -8,19 +8,25 @@ namespace smart_home {
             case DeviceStatus::Undefined:
                 return "Undefined";
                 break;
+
             case DeviceStatus::Off:
                 return "Off";
                 break;
+
             case DeviceStatus::Active:
                 return "Active";
                 break;
+
             case DeviceStatus::Standby:
                 return "Standby";
                 break;
+
             case DeviceStatus::Error:
                 return "Error";
                 break;
+                
             default:
+                return std::string();
                 break;
         }
     }

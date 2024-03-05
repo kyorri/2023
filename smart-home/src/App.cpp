@@ -2,28 +2,56 @@
 
 namespace smart_home {
 App::App() {
-    smart_home::DeviceFactory df;
-    smart_home::Device* d1 = df.Build(smart_home::DeviceType::Speaker);
-    smart_home::SpeakerDevice* sdev1 = dynamic_cast<smart_home::SpeakerDevice*>(d1);
-    sdev1->TurnOn();
-    sdev1->SetVolume(0.5);
-    // sdev1->Interact();
+    XMLWriter xmlwr("test.xml");
+    antoniaptr::unique_ptr<Device> ac(new ACUnitDevice());
+    antoniaptr::unique_ptr<Sensor> s1(new TemperatureSensor());
+    antoniaptr::unique_ptr<Sensor> s2(new HumiditySensor());
+    antoniaptr::unique_ptr<Sensor> s3(new TemperatureSensor());
 
-    smart_home::Device* d2 = df.Build(smart_home::DeviceType::ACUnit);
-    smart_home::ACUnitDevice* acdev1 = dynamic_cast<smart_home::ACUnitDevice*>(d2);
-    std::shared_ptr<smart_home::AirQualitySensor> s1 = std::make_shared<smart_home::AirQualitySensor>(123);
-    acdev1->TurnOn();
-    acdev1->StartHeating();
-    acdev1->AddSensor(s1);
-    acdev1->AddSensor(s1);
-    acdev1->RemoveSensor(s1);
+    DeviceFactory df;
+    SensorFactory sf;
+
+    antoniaptr::unique_ptr<Device> speaker = df.Build(DeviceType::Speaker);
+    ac->TurnOn();
     s1->TurnOn();
     s1->Wait();
-    s1->SetReading(50);
-    acdev1->AddSensor(s1);
-    acdev1->TurnOff();
-    acdev1->TurnOn();
-    smart_home::DevicePrinter* dev_prnt = new smart_home::ACUnitDevicePrinter;
-    dev_prnt->Print(acdev1);
+    s2->TurnOn();
+
+    antoniaptr::unique_ptr<Sensor> s4 = sf.Build(SensorType::AirQualityLevel); 
+
+    s4->SetReading(156);
+    ac->AddSensor(std::move(s1));
+    ac->AddSensor(std::move(s2));
+    ac->AddSensor(std::move(s4));
+
+    antoniaptr::unique_ptr<Room> room1(new Room("Living Room"));
+
+
+    room1->AddDevice(std::move(ac));
+    speaker->AddSensor(std::move(s3));
+    room1->AddDevice(std::move(speaker));
+    xmlwr.AddRoom(std::move(room1));
+
+    antoniaptr::unique_ptr<Room> room2(new Room("Kitchen"));
+    antoniaptr::unique_ptr<Sensor> s5 = sf.Build(SensorType::Temperature);
+    s5->SetReading(22.53);
+    s5->TurnOn();
+    s5->Wait();
+
+    antoniaptr::unique_ptr<Device> d_room2 = df.Build(DeviceType::Thermostat);
+    d_room2->TurnOn();
+    d_room2->Wait();
+    d_room2->TurnOn();
+    std::cout << std::endl;
+    d_room2->AddSensor(std::move(s5));
+
+    DevicePrinter* dp = new ThermostatDevicePrinter();
+    Device* dev = d_room2.get();
+    dp->Print(dev);
+
+    room2->AddDevice(std::move(d_room2));
+
+    xmlwr.AddRoom(std::move(room2));
+    xmlwr.Write();
 }
 } // namespace smart_home

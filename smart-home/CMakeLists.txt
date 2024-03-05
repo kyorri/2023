@@ -8,6 +8,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/pugixml
+        ${PROJECT_SOURCE_DIR}/unique-ptr
 )
 
 add_library(pugixml STATIC pugixml/pugixml.cpp)
@@ -28,21 +29,36 @@ add_executable(exec.out src/_main.cpp
 
                         # Utility classes
                         src/DeviceFactory.cpp
+                        src/SensorFactory.cpp
 
+                        src/MessageDeviceStatus.cpp
                         src/DeviceStatusMessage.cpp
+                        src/MessageSensorStatus.cpp
                         src/SensorStatusMessage.cpp
+                        src/MessageDeviceType.cpp
+                        src/DeviceTypeMessage.cpp
+                        src/MessageSensorType.cpp
+                        src/SensorTypeMessage.cpp
                         src/AirQualityLevelMessage.cpp
 
                         # Printers for status of devices
                         src/ACUnitDevicePrinter.cpp
+                        src/SpeakerDevicePrinter.cpp
+                        src/ThermostatDevicePrinter.cpp
 
                         # Readers
-                        src/ACUnitDeviceReader.cpp
-                        src/SpeakerDeviceReader.cpp
-                        src/ThermostatDeviceReader.cpp
+                        src/XMLReader.cpp
+                        src/XMLRoomReader.cpp
+                        src/XMLACUnitDeviceReader.cpp
+                        src/XMLSpeakerDeviceReader.cpp
+                        src/XMLThermostatDeviceReader.cpp
 
                         # Writers
-
+                        src/XMLWriter.cpp
+                        src/XMLRoomWriter.cpp
+                        src/XMLACUnitDeviceWriter.cpp
+                        src/XMLSpeakerDeviceWriter.cpp
+                        src/XMLThermostatDeviceWriter.cpp
                         )
 
 target_link_libraries(exec.out PRIVATE pugixml)

@@ -5,7 +5,6 @@ namespace smart_home {
 enum class DeviceStatus {
     Undefined,
     Off,
-    Ready,
     Active,
     Standby,
     Error

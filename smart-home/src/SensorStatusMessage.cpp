@@ -21,6 +21,7 @@ std::string SensorStatusMessage::GetStatus() {
             return "Error";
             break;
         default:
+            return std::string();
             break;
     }
 };

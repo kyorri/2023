@@ -3,6 +3,7 @@
 
 #include "Sensor.h"
 #include "Device.h"
+#include "unique_ptr.h"
 
 #include <vector>
 #include <memory>
@@ -13,23 +14,23 @@ class Room {
         Room(std::string);
         ~Room();
 
-        Room(const Room&);
-        Room& operator=(const Room&);
+        Room(const Room&) = delete;
+        Room& operator=(const Room&) = delete;
         
         Room(Room&&);
         Room& operator=(Room&&);
 
         void SetName(std::string);
-        std::string GetName();
+        std::string GetName() const;
 
-        void AddDevice(std::shared_ptr<Device>&);
-        void RemoveDevice(std::shared_ptr<Device>&);
+        void AddDevice(antoniaptr::unique_ptr<Device>);
+        void RemoveDevice(int);
 
         bool operator==(const Room&);
 
-        std::vector<std::shared_ptr<Device>> GetDevices();
+        std::vector<Device*> GetDevices() const;
     private:
-        std::vector<std::shared_ptr<Device>> devices_;
+        std::vector<antoniaptr::unique_ptr<Device>> devices_;
         std::string name_;
 };
 } // namespace smart_home

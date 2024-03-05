@@ -117,40 +117,25 @@ void SpeakerDevice::SetStatus(DeviceStatus new_status) {
     status_ = new_status;
 };
 
-std::vector<std::shared_ptr<Sensor>> SpeakerDevice::GetSensors() {
-    return sensors_;
+std::vector<Sensor*> SpeakerDevice::GetSensors() {
+    std::vector<Sensor*> sensors;
+    for (const auto& d : sensors_) {
+        sensors.push_back(d.get());
+    }
+    return sensors;
 };
 
-void SpeakerDevice::AddSensor(std::shared_ptr<Sensor> p) {
-    try {
-        auto it = std::find_if(sensors_.begin(), sensors_.end(),
-                [&p](const std::shared_ptr<Sensor>& sensor) {
-                    return sensor.get() == p.get();
-                });
-        if (it == sensors_.end()) {
-            sensors_.push_back(p);
-        }
-        else {
-            throw std::runtime_error("This sensor is already assigned to this speaker!");
-        }
-    }
-    catch(const std::exception& e) {
-        std::cerr << e.what() << std::endl;
-        SetStatus(DeviceStatus::Error);
-    }
+void SpeakerDevice::AddSensor(antoniaptr::unique_ptr<Sensor> p) {
+    sensors_.push_back(std::move(p));
 };
 
-void SpeakerDevice::RemoveSensor(std::shared_ptr<Sensor> p) {
+void SpeakerDevice::RemoveSensor(int index) {
     try {
-        auto it = std::find_if(sensors_.begin(), sensors_.end(),
-                [&p](const std::shared_ptr<Sensor>& sensor) {
-                    return sensor.get() == p.get();
-                });
-        if (it == sensors_.end()) {
-            throw std::runtime_error("This sensor is not assigned to this speaker!");
+        if (index > sensors_.size() || index < 0) {
+            throw std::runtime_error("This index is not present in the sensors of this AC Unit.");
         }
         else {
-            sensors_.erase(it);
+            sensors_.erase(sensors_.begin() + index);
         }
     }
     catch (const std::exception& e) {
@@ -166,4 +151,9 @@ double SpeakerDevice::GetVolume() {
 void SpeakerDevice::SetVolume(double new_volume) {
     volume_ = new_volume;
 };
+
+DeviceType SpeakerDevice::GetDeviceType() {
+    return device_type_;
+}
+
 } // namespace smart_home

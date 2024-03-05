@@ -2,7 +2,7 @@
 #include "SensorStatusMessage.h"
 
 namespace smart_home {
-HumiditySensor::HumiditySensor() : status_(SensorStatus::Off), reading_(0.0) {};
+HumiditySensor::HumiditySensor() : status_(SensorStatus::Off), reading_(0.0), sensor_type_(SensorType::Humidity) {};
 
 HumiditySensor::HumiditySensor(double reading) : status_(SensorStatus::Off) {
     SetReading(reading);
@@ -107,4 +107,9 @@ void HumiditySensor::TurnOn() {
 void HumiditySensor::TurnOff() {
     status_ = SensorStatus::Off;
 };
+
+SensorType HumiditySensor::GetSensorType() {
+    return sensor_type_;
+}
+
 } // namespace smart_home

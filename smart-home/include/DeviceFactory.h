@@ -9,7 +9,7 @@
 namespace smart_home {
 class DeviceFactory {
     public:
-        Device* Build(DeviceType);
+        antoniaptr::unique_ptr<Device> Build(DeviceType);
 };
 } // namespace smart_home
 #endif  // SH_DEVICEFACTORY_INCLUDE_H_

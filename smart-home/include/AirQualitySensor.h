@@ -25,10 +25,12 @@ class AirQualitySensor : public Sensor {
         void SetReading(double) override;
 
         AirQualityLevel GetAirQualityLevel();
-
+        
+        SensorType GetSensorType();
     private:
         SensorStatus status_;
         double reading_;
+        SensorType sensor_type_;
         AirQualityLevel air_quality_lvl_;
 
 };

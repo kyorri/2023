@@ -1,20 +1,23 @@
 #include "DeviceFactory.h"
 
 namespace smart_home {
-Device* DeviceFactory::Build(DeviceType device_type) {
+antoniaptr::unique_ptr<Device> DeviceFactory::Build(DeviceType device_type) {
+
     switch (device_type) {
         case DeviceType::ACUnit:
-            return new ACUnitDevice();
+            return std::move(antoniaptr::unique_ptr<Device>(new ACUnitDevice()));
             break;
 
         case DeviceType::Speaker:
-            return new SpeakerDevice();
+            return std::move(antoniaptr::unique_ptr<Device>(new SpeakerDevice()));
             break;
 
         case DeviceType::Thermostat:
-            return new ThermostatDevice();
+            return std::move(antoniaptr::unique_ptr<Device>(new ThermostatDevice()));
             break;
+        
+        default:
+            return std::move(antoniaptr::unique_ptr<Device>(nullptr));
     };
-    return nullptr;
 };
 } // namespace smart_home

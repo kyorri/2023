@@ -5,7 +5,6 @@ namespace smart_home {
 enum class SensorStatus {
     Undefined,
     Off,
-    Ready,
     Active,
     Standby,
     Error

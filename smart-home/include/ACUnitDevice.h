@@ -19,19 +19,22 @@ class ACUnitDevice : public Device {
         DeviceStatus GetStatus() override;
         void SetStatus(DeviceStatus) override;
 
-        std::vector<std::shared_ptr<Sensor>> GetSensors() override;
-        void AddSensor(std::shared_ptr<Sensor>) override;
-        void RemoveSensor(std::shared_ptr<Sensor>) override;
+        std::vector<Sensor*> GetSensors() override;
+        void AddSensor(antoniaptr::unique_ptr<Sensor>) override;
+        void RemoveSensor(int) override;
 
         ACHeatingStatus GetHeatingStatus();
+        void SetHeatingStatus(const ACHeatingStatus&);
+
         void StartHeating();
         void StopHeating();
         void StartCooling();
         void StopCooling();
 
+        DeviceType GetDeviceType();
     private:
         DeviceStatus status_;
-        std::vector<std::shared_ptr<Sensor>> sensors_;
+        std::vector<antoniaptr::unique_ptr<Sensor>> sensors_;
         DeviceType device_type_;
         ACHeatingStatus heating_status_;
 };

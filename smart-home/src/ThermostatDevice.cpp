@@ -126,40 +126,25 @@ void ThermostatDevice::SetStatus(DeviceStatus new_status) {
     status_ = new_status;
 };
 
-std::vector<std::shared_ptr<Sensor>> ThermostatDevice::GetSensors() {
-    return sensors_;
+std::vector<Sensor*> ThermostatDevice::GetSensors() {
+    std::vector<Sensor*> sensors;
+    for (const auto& d : sensors_) {
+        sensors.push_back(d.get());
+    }
+    return sensors;
 };
 
-void ThermostatDevice::AddSensor(std::shared_ptr<Sensor> p) {
-    try {
-        auto it = std::find_if(sensors_.begin(), sensors_.end(),
-                [&p](const std::shared_ptr<Sensor>& sensor) {
-                    return sensor.get() == p.get();
-                });
-        if (it == sensors_.end()) {
-            sensors_.push_back(p);
-        }
-        else {
-            throw std::runtime_error("This sensor is already assigned to this thermostat!");
-        }
-    }
-    catch(const std::exception& e) {
-        std::cerr << e.what() << std::endl;
-        SetStatus(DeviceStatus::Error);
-    }
+void ThermostatDevice::AddSensor(antoniaptr::unique_ptr<Sensor> p) {
+    sensors_.push_back(std::move(p));
 };
 
-void ThermostatDevice::RemoveSensor(std::shared_ptr<Sensor> p) {
+void ThermostatDevice::RemoveSensor(int index) {
     try {
-        auto it = std::find_if(sensors_.begin(), sensors_.end(),
-                [&p](const std::shared_ptr<Sensor>& sensor) {
-                    return sensor.get() == p.get();
-                });
-        if (it == sensors_.end()) {
-            throw std::runtime_error("This sensor is not assigned to this thermostat!");
+        if (index > sensors_.size() || index < 0) {
+            throw std::runtime_error("This index is not present in the sensors of this AC Unit.");
         }
         else {
-            sensors_.erase(it);
+            sensors_.erase(sensors_.begin() + index);
         }
     }
     catch (const std::exception& e) {
@@ -183,4 +168,8 @@ void ThermostatDevice::SetTargetTemperature(double new_target_temp) {
 void ThermostatDevice::SetTemperature(double new_temperature) {
     temperature_ = new_temperature;
 };
+
+DeviceType ThermostatDevice::GetDeviceType() {
+    return device_type_;
+}
 } // namespace smart_home

@@ -3,7 +3,7 @@
 #include "AirQualityLevelMessage.h"
 
 namespace smart_home {
-AirQualitySensor::AirQualitySensor() : status_(SensorStatus::Off), reading_(0.0), air_quality_lvl_(AirQualityLevel::Good) {};
+AirQualitySensor::AirQualitySensor() : status_(SensorStatus::Off), reading_(0.0), air_quality_lvl_(AirQualityLevel::Good), sensor_type_(SensorType::AirQualityLevel) {};
 
 AirQualitySensor::AirQualitySensor(double reading) : status_(SensorStatus::Off), reading_(reading) {
     if (reading >= 0 && reading <= 50) {
@@ -149,5 +149,9 @@ void AirQualitySensor::TurnOn() {
 
 void AirQualitySensor::TurnOff() {
     status_ = SensorStatus::Off;
+};
+
+SensorType AirQualitySensor::GetSensorType() {
+    return sensor_type_;
 };
 } // namespace smart_home

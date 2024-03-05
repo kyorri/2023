@@ -18,15 +18,17 @@ class SpeakerDevice : public Device {
         DeviceStatus GetStatus() override;
         void SetStatus(DeviceStatus) override;
 
-        std::vector<std::shared_ptr<Sensor>> GetSensors() override;
-        void AddSensor(std::shared_ptr<Sensor>) override;
-        void RemoveSensor(std::shared_ptr<Sensor>) override;
+        std::vector<Sensor*> GetSensors() override;
+        void AddSensor(antoniaptr::unique_ptr<Sensor>) override;
+        void RemoveSensor(int) override;
 
         double GetVolume();
         void SetVolume(double);
+
+        DeviceType GetDeviceType();
     private:
         DeviceStatus status_;
-        std::vector<std::shared_ptr<Sensor>> sensors_;
+        std::vector<antoniaptr::unique_ptr<Sensor>> sensors_;
         DeviceType device_type_;
         double volume_;
 };

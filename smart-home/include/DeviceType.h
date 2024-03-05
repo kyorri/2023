@@ -5,7 +5,8 @@ namespace smart_home {
 enum class DeviceType {
     ACUnit,
     Speaker,
-    Thermostat
+    Thermostat,
+    Undefined
 };
 }; // namespace smart_home
 
