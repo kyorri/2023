@@ -45,6 +45,10 @@ add_executable(exec.out src/_main.cpp
                         src/ACUnitDevicePrinter.cpp
                         src/SpeakerDevicePrinter.cpp
                         src/ThermostatDevicePrinter.cpp
+                        
+                        # Printing service
+                        src/ThreadedPrintingService.cpp
+                        src/RoomPrinter.cpp
 
                         # Readers
                         src/XMLReader.cpp
