@@ -25,8 +25,11 @@
 
 #include "XMLReader.h"
 #include "XMLWriter.h"
+#include "RoomPrinter.h"
+#include "ThreadedPrintingService.h"
 
 #include "pugixml.hpp"
+
 
 namespace smart_home {
 class App {

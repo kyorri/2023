@@ -30,7 +30,11 @@ App::App() {
     room1->AddDevice(std::move(ac));
     speaker->AddSensor(std::move(s3));
     room1->AddDevice(std::move(speaker));
-    xmlwr.AddRoom(std::move(room1));
+
+    // RoomPrinter room_pr;
+
+    // room_pr.Print(room1.get());
+    // xmlwr.AddRoom(std::move(room1));
 
     antoniaptr::unique_ptr<Room> room2(new Room("Kitchen"));
     antoniaptr::unique_ptr<Sensor> s5 = sf.Build(SensorType::Temperature);
@@ -45,13 +49,19 @@ App::App() {
     std::cout << std::endl;
     d_room2->AddSensor(std::move(s5));
 
-    DevicePrinter* dp = new ThermostatDevicePrinter();
-    Device* dev = d_room2.get();
-    dp->Print(dev);
+    // DevicePrinter* dp = new ThermostatDevicePrinter();
+    // Device* dev = d_room2.get();
+    // dp->Print(dev);
 
     room2->AddDevice(std::move(d_room2));
 
-    xmlwr.AddRoom(std::move(room2));
+    ThreadedPrintingService tps(room1.get(), 4);
+    tps.StartPrintingService();
+    std::this_thread::sleep_for(std::chrono::seconds(10));
+    tps.StopPrintingService();
+
+    // xmlwr.AddRoom(std::move(room2));
     xmlwr.Write();
+
 }
 } // namespace smart_home
