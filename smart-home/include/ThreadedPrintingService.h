@@ -6,6 +6,7 @@
 #include <thread>
 #include <mutex>
 #include <chrono>
+#include <atomic>
 
 namespace smart_home {
 class ThreadedPrintingService {
@@ -20,6 +21,7 @@ class ThreadedPrintingService {
     private:
         Room* room_;
         int period_;
+        std::atomic<bool> stop_;
         std::thread printing_thread_;
         std::mutex print_mutex_;
 

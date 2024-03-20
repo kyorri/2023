@@ -33,10 +33,12 @@ AirQualitySensor::AirQualitySensor(double reading) : status_(SensorStatus::Off),
     }
 };
 
-void AirQualitySensor::Interact() {
+std::stringstream AirQualitySensor::Interact() {
     SensorStatusMessage ssm(status_);
     AirQualityLevelMessage aqlm(air_quality_lvl_);
-    std::cout << "This Air Quality sensor is in the state of " << ssm.GetStatus() << ", and is indicating a reading of " << reading_ << " Air Quality Index, in the air quality level of " << aqlm.GetStatus() << "!" << std::endl;
+    std::stringstream sensor_stream;
+    sensor_stream << "This Air Quality sensor is in the state of " << ssm.GetStatus() << ", and is indicating a reading of " << reading_ << " Air Quality Index, in the air quality level of " << aqlm.GetStatus() << "!" << std::endl;
+    return sensor_stream;
 };
 
 SensorStatus AirQualitySensor::GetStatus() {

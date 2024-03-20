@@ -6,36 +6,43 @@
 #include "ThermostatDevicePrinter.h"
 
 namespace smart_home {
-void RoomPrinter::Print(Room* room) {
-    DevicePrinter* dev_printer;
+std::stringstream RoomPrinter::Print(Room* room) {
+    std::stringstream room_stream;
     try {
         if (room != nullptr) {
-            for (const auto& device : room->GetDevices()) {
-                if (device != nullptr) {
-                    switch (device->GetDeviceType()) {
-                        case DeviceType::ACUnit:
-                            dev_printer = new ACUnitDevicePrinter();
-                            break;
-                        
-                        case DeviceType::Speaker:
-                            dev_printer = new SpeakerDevicePrinter();
-                            break;
 
-                        case DeviceType::Thermostat:
-                            dev_printer = new ACUnitDevicePrinter();
-                            break;
+            if (room->GetDevices().size() > 0) {
+                room_stream << room->GetName() << " has " << room->GetDevices().size() << " device(s) inside." << std::endl;
+                for (const auto& device : room->GetDevices()) {
+                    if (device != nullptr) {
+                        DevicePrinter* dev_printer;
+                        switch (device->GetDeviceType()) {
+                            case DeviceType::ACUnit:
+                                dev_printer = new ACUnitDevicePrinter();
+                                break;
+                            
+                            case DeviceType::Speaker:
+                                dev_printer = new SpeakerDevicePrinter();
+                                break;
 
-                        default:
-                            throw std::runtime_error("There was a problem fetching the Device type.");
-                            break;
+                            case DeviceType::Thermostat:
+                                dev_printer = new ACUnitDevicePrinter();
+                                break;
+
+                            default:
+                                throw std::runtime_error("There was a problem fetching the Device type.");
+                                break;
+                        }
+                        room_stream << (dev_printer->Print(device)).rdbuf();
                     }
-                    dev_printer->Print(device);
+                    else {
+                        throw std::runtime_error("Cannot print a Device with a nullptr address.");
+                    }
                 }
-                else {
-                    throw std::runtime_error("Cannot print a Device with a nullptr address.");
-                }
-            }
-            
+            } 
+            else {
+                std::cout << room->GetName() << " has no devices." << std::endl;
+            } 
         }
         else {
             throw std::runtime_error("Cannot print a Room with a nulllptr address.");
@@ -43,5 +50,6 @@ void RoomPrinter::Print(Room* room) {
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl; 
     }
+    return room_stream;
 };
 } // namespace smart_home

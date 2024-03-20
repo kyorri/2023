@@ -8,9 +8,11 @@ HumiditySensor::HumiditySensor(double reading) : status_(SensorStatus::Off) {
     SetReading(reading);
 };
 
-void HumiditySensor::Interact() {
+std::stringstream HumiditySensor::Interact() {
     SensorStatusMessage ssm(status_);
-    std::cout << "This Humidity sensor is in the state of " << ssm.GetStatus() << ", and is indicating a humidity level of " << GetPercent() << "%!" << std::endl;
+    std::stringstream sensor_stream;
+    sensor_stream << "This Humidity sensor is in the state of " << ssm.GetStatus() << ", and is indicating a humidity level of " << GetPercent() << "%!" << std::endl;
+    return sensor_stream;
 };
 
 SensorStatus HumiditySensor::GetStatus() {

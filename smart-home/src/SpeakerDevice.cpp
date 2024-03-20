@@ -10,23 +10,24 @@ SpeakerDevice::SpeakerDevice() : status_(DeviceStatus::Off), device_type_(Device
     sensors_.clear();
 };
 
-void SpeakerDevice::Interact() {
+std::stringstream SpeakerDevice::Interact() {
+    std::stringstream device_stream;
     try {
         switch (status_) {
             case DeviceStatus::Off:
-                std::cout << "This speaker is turned off!" << std::endl;
+                device_stream << "This speaker is turned off!" << std::endl;
                 break;
 
             case DeviceStatus::Active:
-                std::cout << "This speaker is playing your favourite songs at " << static_cast<int>(volume_ * 100) << "\% volume!" << std::endl;
+                device_stream << "This speaker is playing your favourite songs at " << static_cast<int>(volume_ * 100) << "\% volume!" << std::endl;
                 break;
 
             case DeviceStatus::Standby:
-                std::cout << "This speaker is standing-by!" << std::endl;
+                device_stream << "This speaker is standing-by!" << std::endl;
                 break;
 
             case DeviceStatus::Error:
-                std::cout << "Unexpected error, speaker will shut down!" << std::endl;
+                device_stream << "Unexpected error, speaker will shut down!" << std::endl;
                 TurnOff();
                 break;
 
@@ -38,7 +39,7 @@ void SpeakerDevice::Interact() {
     catch(const std::exception& e) {
         std::cerr << e.what() << std::endl;
     }
-    
+    return device_stream;
 };
 
 void SpeakerDevice::Wait() {

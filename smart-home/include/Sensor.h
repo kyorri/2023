@@ -5,13 +5,14 @@
 #include "SensorType.h"
 
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <memory>
 
 namespace smart_home {
 class Sensor {
     public:
-        virtual void Interact() = 0;
+        virtual std::stringstream Interact() = 0;
 
         virtual void Wait() = 0;
         virtual void Continue() = 0;

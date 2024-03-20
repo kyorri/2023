@@ -7,7 +7,7 @@
 namespace smart_home {
 class ACUnitDevicePrinter : public DevicePrinter {
     public:
-        void Print(Device*);
+        std::stringstream Print(Device*);
 };
 } // namespace smart_home
 #endif  // SH_ACUNITDEVICEPRINTER_INCLUDE_H_

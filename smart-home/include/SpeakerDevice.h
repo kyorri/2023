@@ -8,7 +8,7 @@ class SpeakerDevice : public Device {
     public:
         SpeakerDevice();
 
-        void Interact() override;
+        std::stringstream Interact() override;
 
         void Wait() override;
         void Continue() override;

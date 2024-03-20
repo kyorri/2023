@@ -7,13 +7,14 @@
 #include "unique_ptr.h"
 
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <memory>
 
 namespace smart_home {
 class Device {
     public:
-        virtual void Interact() = 0;
+        virtual std::stringstream Interact() = 0;
 
         virtual void Wait() = 0;
         virtual void Continue() = 0;

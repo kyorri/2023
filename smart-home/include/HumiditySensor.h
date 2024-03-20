@@ -9,7 +9,7 @@ class HumiditySensor : public Sensor {
         HumiditySensor();
         HumiditySensor(double);
 
-        void Interact() override;
+        std::stringstream Interact() override;
 
         void Wait() override;
         void Continue() override;
