@@ -6,9 +6,11 @@ TemperatureSensor::TemperatureSensor() : status_(SensorStatus::Off), reading_(0.
 
 TemperatureSensor::TemperatureSensor(double reading) : status_(SensorStatus::Off), reading_(reading) {};
 
-void TemperatureSensor::Interact() {
+std::stringstream TemperatureSensor::Interact() {
     SensorStatusMessage ssm(status_);
-    std::cout << "This Temperature sensor is in the state of " << ssm.GetStatus() << ", and is indicating a temperature of " << reading_ << " degrees Celsius!" << std::endl;
+    std::stringstream sensor_stream;
+    sensor_stream << "This Temperature sensor is in the state of " << ssm.GetStatus() << ", and is indicating a temperature of " << reading_ << " degrees Celsius!" << std::endl;
+    return sensor_stream;
 };
 
 SensorStatus TemperatureSensor::GetStatus() {

@@ -6,12 +6,13 @@
 #include "ThermostatDevicePrinter.h"
 
 namespace smart_home {
-void RoomPrinter::Print(Room* room) {
+std::stringstream RoomPrinter::Print(Room* room) {
+    std::stringstream room_stream;
     try {
         if (room != nullptr) {
 
             if (room->GetDevices().size() > 0) {
-                std::cout << room->GetName() << " has " << room->GetDevices().size() << " device(s) inside." << std::endl;
+                room_stream << room->GetName() << " has " << room->GetDevices().size() << " device(s) inside." << std::endl;
                 for (const auto& device : room->GetDevices()) {
                     if (device != nullptr) {
                         DevicePrinter* dev_printer;
@@ -32,7 +33,7 @@ void RoomPrinter::Print(Room* room) {
                                 throw std::runtime_error("There was a problem fetching the Device type.");
                                 break;
                         }
-                        dev_printer->Print(device);
+                        room_stream << (dev_printer->Print(device)).rdbuf();
                     }
                     else {
                         throw std::runtime_error("Cannot print a Device with a nullptr address.");
@@ -49,5 +50,6 @@ void RoomPrinter::Print(Room* room) {
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl; 
     }
+    return room_stream;
 };
 } // namespace smart_home

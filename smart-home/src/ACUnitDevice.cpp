@@ -9,26 +9,27 @@ ACUnitDevice::ACUnitDevice() : status_(DeviceStatus::Off), heating_status_(ACHea
     sensors_.clear();
 };
 
-void ACUnitDevice::Interact() {
+std::stringstream ACUnitDevice::Interact() {
+    std::stringstream device_stream;
     try {
         switch (status_) {
             case DeviceStatus::Off:
-                std::cout << "This Air Conditioning unit is turned off!" << std::endl;
+                device_stream << "This Air Conditioning unit is turned off!" << std::endl;
                 break;
 
             case DeviceStatus::Active:
                 try {
                     switch (heating_status_) {
                         case ACHeatingStatus::Standby:
-                            std::cout << "This Air Conditioning unit is neither cooling nor heating up the room!" << std::endl;
+                            device_stream << "This Air Conditioning unit is neither cooling nor heating up the room!" << std::endl;
                             break;
 
                         case ACHeatingStatus::Cooling:
-                            std::cout << "This Air Conditioning unit is cooling up the room!" << std::endl;
+                            device_stream << "This Air Conditioning unit is cooling up the room!" << std::endl;
                             break;
 
                         case ACHeatingStatus::Heating:
-                            std::cout << "This Air Conditioning unit is heating up the room!" << std::endl;
+                            device_stream << "This Air Conditioning unit is heating up the room!" << std::endl;
                             break;
 
                         default:
@@ -42,11 +43,11 @@ void ACUnitDevice::Interact() {
                 break;
 
             case DeviceStatus::Standby:
-                std::cout << "This Air Conditioning unit is standing-by!" << std::endl;
+                device_stream << "This Air Conditioning unit is standing-by!" << std::endl;
                 break;
 
             case DeviceStatus::Error:
-                std::cout << "Unexpected error, the Air Conditioning unit will shut down!" << std::endl;
+                device_stream << "Unexpected error, the Air Conditioning unit will shut down!" << std::endl;
                 TurnOff();
                 break;
 
@@ -58,7 +59,7 @@ void ACUnitDevice::Interact() {
     catch(const std::exception& e) {
         std::cerr << e.what() << std::endl;
     }
-    
+    return device_stream;
 };
 
 void ACUnitDevice::Wait() {

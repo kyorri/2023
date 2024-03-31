@@ -10,7 +10,7 @@ class ThermostatDevice : public Device {
         ThermostatDevice();
         ThermostatDevice(const TemperatureSensor);
 
-        void Interact() override;
+        std::stringstream Interact() override;
 
         void Wait() override;
         void Continue() override;

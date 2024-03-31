@@ -11,7 +11,7 @@ class AirQualitySensor : public Sensor {
         AirQualitySensor();
         AirQualitySensor(double);
 
-        void Interact() override;
+        std::stringstream Interact() override;
         
         void Wait() override;
         void Continue() override;

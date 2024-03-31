@@ -7,7 +7,10 @@
 #include <mutex>
 #include <chrono>
 #include <atomic>
+<<<<<<< HEAD
 #include <condition_variable>
+=======
+>>>>>>> featureHW8_client_server_impl
 
 namespace smart_home {
 class ThreadedPrintingService {

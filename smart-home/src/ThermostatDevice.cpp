@@ -14,28 +14,29 @@ ThermostatDevice::ThermostatDevice(TemperatureSensor ts) : status_(DeviceStatus:
     sensors_.clear();
 };
 
-void ThermostatDevice::Interact() {
+std::stringstream ThermostatDevice::Interact() {
+    std::stringstream device_stream;
     try {
         switch (status_) {
             case DeviceStatus::Off:
-                std::cout << "This thermostat is turned off!" << std::endl;
+                device_stream << "This thermostat is turned off!" << std::endl;
                 break;
 
             case DeviceStatus::Active:
                 if (target_temp_ > temperature_) {
-                    std::cout << "This thermostat is heating up to " << target_temp_ << " degrees Celsius, and the current temperature is " << temperature_ << " degrees Celsius!" << std::endl;
+                    device_stream << "This thermostat is heating up to " << target_temp_ << " degrees Celsius, and the current temperature is " << temperature_ << " degrees Celsius!" << std::endl;
                 }
                 else {
-                    std::cout << "This thermostat is indicating a temperature of " << temperature_ << " degrees Celsius, and the target temperature is " << target_temp_ << " degrees Celsius!" << std::endl;
+                    device_stream << "This thermostat is indicating a temperature of " << temperature_ << " degrees Celsius, and the target temperature is " << target_temp_ << " degrees Celsius!" << std::endl;
                 }
                 break;
 
             case DeviceStatus::Standby:
-                std::cout << "This thermostat is standing-by!" << std::endl;
+                device_stream << "This thermostat is standing-by!" << std::endl;
                 break;
 
             case DeviceStatus::Error:
-                std::cout << "Unexpected error, the thermostat will shut down!" << std::endl;
+                device_stream << "Unexpected error, the thermostat will shut down!" << std::endl;
                 TurnOff();
                 break;
 
@@ -47,7 +48,7 @@ void ThermostatDevice::Interact() {
     catch(const std::exception& e) {
         std::cerr << e.what() << std::endl;
     }
-    
+    return device_stream;
 };
 
 void ThermostatDevice::Wait() {

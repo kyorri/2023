@@ -9,7 +9,7 @@ class ACUnitDevice : public Device {
     public:
         ACUnitDevice();
 
-        void Interact() override;
+        std::stringstream Interact() override;
 
         void Wait() override;
         void Continue() override;

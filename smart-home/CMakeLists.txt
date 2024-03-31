@@ -15,6 +15,9 @@ add_library(pugixml STATIC pugixml/pugixml.cpp)
 
 add_executable(exec.out src/_main.cpp
                         src/App.cpp
+                        src/ClientApp.cpp
+                        src/ServerApp.cpp
+                        src/Socket.cpp
                         src/Room.cpp
 
                         # Devices
