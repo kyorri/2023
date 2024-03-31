@@ -13,6 +13,7 @@ std::stringstream RoomPrinter::Print(Room* room) {
 
             if (room->GetDevices().size() > 0) {
                 room_stream << room->GetName() << " has " << room->GetDevices().size() << " device(s) inside." << std::endl;
+
                 for (const auto& device : room->GetDevices()) {
                     if (device != nullptr) {
                         DevicePrinter* dev_printer;
