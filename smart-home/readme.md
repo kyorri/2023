@@ -1,9 +1,3 @@
-# Description
-> Overhauled the application with new devices;
-> Added some state-machines for deciding logic using enum classes;
-> Added error handling using exceptions;
-> Outlined some future changes for the application
-
 # HW8
 * Added client / server functions for the application. To use the app: [executable] [server/client] (port)
 * Used std::stringstream for passing messages around the application to send a stream of bytes between the client and the server instance;
@@ -38,3 +32,20 @@
         1. Create a room to the object pool: create room Kitchen
         2. Create a device to the pool: create device_thermostat
         3. Create a sensor to the pool: create sensor_airquality
+
+
+# HW9 - Serialization and Scripting
+* Added the Message class for serialization of the client instances' inputs, with a timestamp for the bash scripting part of the HW.
+* Used a Date class to keep track of the day by using the ctime library and the c-style time functions and structs.
+If we'd have C++20 we could have used the newer chrono types from the stdlib.
+* The bash script will use the word count options for grep (-w -c) that will supplement the number of matches of the timestamp
+of the day in the yyyy-mm-dd format that is supplied by the date command using the +%F specifier.
+* The output of the grep command (the number of occurences/ requests for our server) will show up in a file as so:
+    > "There were x request(s) today! (yyyy-mm-dd)"
+* Added a Thread Pool implementation to permit our server to send and receive data from and to our multiple client instances
+using threads, but with a lesser memory overhead by not constructing/deconstructing threads every time we get a connection to a client, having a single finite pool of threads.
+* Server will log the timestamp of a client request, followed by its name, and then followed by the content of the request.
+* The logging will be in this format
+    > [yyyy/mm/dd / username]
+    > <br>CONTENT
+* The serialization will be done using the Boost library serialization.

@@ -1,5 +1,7 @@
 #include "ClientApp.h"
 
+#include <boost/archive/text_oarchive.hpp>
+
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
@@ -15,6 +17,7 @@ ClientApp::ClientApp() : max_buffer_size_(0) {
 ClientApp::ClientApp(unsigned short int server_port) : conn_socket_(), server_port_(server_port), max_buffer_size_(8192) {
     Initialize();
     AttemptConnection();
+    RespondAuthentication();
     TransferLoop();
 };
 
@@ -37,6 +40,30 @@ void ClientApp::AttemptConnection() {
     }
 };
 
+void ClientApp::RespondAuthentication() {
+    const int server_message_max_length = 64;
+
+    char buffer_recv[server_message_max_length] = {};
+
+    Socket& server_socket = conn_socket_;
+
+    int bytes_received = recv(server_socket(), buffer_recv, server_message_max_length, 0);
+
+    if (bytes_received == -1) {
+        throw std::runtime_error("Could not receive the data from the server for the authentication process!");
+    }
+
+    std::string client_name;
+    std::getline(std::cin, client_name);
+
+    int bytes_sent = send(server_socket(), client_name.c_str(), client_name.size(), 0);
+    if (bytes_sent == -1) {
+        throw std::runtime_error("There was a problem sending the client name information to the server instance!");
+    }
+
+};
+
+
 void ClientApp::TransferLoop() {
     char buffer_recv[max_buffer_size_] = {0};
     char buffer_send[max_buffer_size_] = {0};
@@ -54,16 +81,26 @@ void ClientApp::TransferLoop() {
         
         // we get data from client and check if we exit, we ll use an exception to stop the client instance
         std::cout << "Enter message for the server (enter *nothing* to close):\n >>> ";
-        fgets(buffer_send, sizeof(buffer_send), stdin);
+        std::string client_input;
+        std::getline(std::cin, client_input);
+
+        Message message(client_input, client_name_);
+
+        std::stringstream ss;
+        boost::archive::text_oarchive out_archive(ss);
+        out_archive << message;
+
+        std::string serialized_message = ss.str();
+
         std::string token;
-        std::stringstream exit_check(buffer_send);
+        std::stringstream exit_check(client_input);
         exit_check >> token;
         if (token.size() == 0) {
             throw std::runtime_error("Ending connection to server instance!");
         }
         token.clear();
 
-        bytes_sent = send(conn_socket_(), buffer_send, strlen(buffer_send), 0);
+        bytes_sent = send(conn_socket_(), serialized_message.c_str(), serialized_message.size(), 0);
         if (bytes_sent == -1) {
             throw std::runtime_error("There was an error sending data to the server!");
         }

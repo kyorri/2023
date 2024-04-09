@@ -4,6 +4,7 @@
 #include "RoomPrinter.h"
 
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <cstdlib>
 #include <cstdio>
@@ -13,17 +14,21 @@
 #include <stdexcept>
 
 namespace smart_home {
-ServerApp::ServerApp() : max_buffer_size_(0) {
+ServerApp::ServerApp() : max_buffer_size_(0), max_connections_(0) {
     throw std::invalid_argument("Please enter a port number for the server!");
 };
 
-ServerApp::ServerApp(int server_port) : server_socket_(), server_port_(server_port), max_buffer_size_(8192) {
-    InitializeAndListen();
-    AcceptConnection();
-    TransferLoop();
+ServerApp::ServerApp(int server_port) : server_socket_(), server_port_(server_port), max_buffer_size_(8192), max_connections_(10) {
+    Initialize();
+    MainLoop();
 };
 
-void ServerApp::InitializeAndListen() {
+ServerApp::ServerApp(int server_port, int backlog) : server_socket_(), max_connections_(backlog), server_port_(server_port), max_buffer_size_(8192) {
+    Initialize();
+    MainLoop();
+};
+
+void ServerApp::Initialize() {
     sockaddr_in server_address;
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(server_port_);
@@ -33,29 +38,74 @@ void ServerApp::InitializeAndListen() {
         throw std::runtime_error("Error at bind for the server!");
     }
 
-    if (listen(server_socket_(), 1) == -1) {
+    if (listen(server_socket_(), max_connections_) == -1) {
         throw std::runtime_error("Listening failed for the server!");
     }
+
     std::cout << "Server is listening at port number " << server_port_ << "!" << std::endl;
 };
 
-void ServerApp::AcceptConnection() {
-    sockaddr_in client_address;
-    socklen_t client_addr_len = sizeof(client_address);
-    client_socket_ = std::move(accept(server_socket_(), (struct sockaddr *)&client_address, &client_addr_len));
+void ServerApp::MainLoop() {
+    ThreadPool tp(std::thread::hardware_concurrency());
 
-    if (client_socket_() == -1) {
-        throw std::runtime_error("Accepting the client connection failed! Possible invalid socket file descriptor!");
+    while (true) {
+        sockaddr_in client_address;
+        socklen_t client_addr_len = sizeof(client_address);
+        Socket new_client_socket = std::move(accept(server_socket_(), (struct sockaddr *)&client_address, &client_addr_len));
+        if (new_client_socket() == -1) {
+            throw std::runtime_error("Accepting the client connection failed! Possible invalid socket file descriptor!");
+        }
+        
+        std::cout << "Client connected!" << std::endl;
+
+        ServerConnection new_conn(new_client_socket, client_address, client_addr_len);
+
+        tp.enqueue([this, &new_conn](){
+            AuthenticateClient(std::move(new_conn));
+        });
+
+        tp.enqueue([this, &new_conn](){
+            HandleClient(std::move(new_conn));
+        });
+        
+        clients_connected_.push_back(std::move(new_conn));
     }
-    std::cout << "Client connected!" << std::endl;
+    
 };
 
-void ServerApp::TransferLoop() {
+void ServerApp::AuthenticateClient(ServerConnection conn) {
+    const int client_name_max_length = 64;
+
+    std::string authentication_message = "Please enter your username (Type *nothing* to exit): ";
+    char buffer_recv[client_name_max_length] = {};
+
+    Socket& client_socket = conn.GetSocket();
+
+    int bytes_sent = send(client_socket(), authentication_message.c_str(), authentication_message.size(), 0);
+    if (bytes_sent == -1) {
+        throw std::runtime_error("There was a problem prompting a user for their username!");
+    }
+    
+    int bytes_received = recv(client_socket(), buffer_recv, client_name_max_length, 0);
+    if (bytes_received == 0) {
+        throw std::runtime_error("The client chose to exit the authentication process!");
+    }
+    if (bytes_received == -1) {
+        throw std::runtime_error("There was an error fetching the client's name!");
+    }
+
+    std::string client_name = buffer_recv;
+    conn.SetClientName(client_name);
+};
+
+void ServerApp::HandleClient(ServerConnection conn) {
     int bytes_received;
     int bytes_sent;
 
     char buffer_recv[max_buffer_size_] = {0};
     char buffer_send[max_buffer_size_] = {0};
+
+    Socket& client_socket = conn.GetSocket();
 
     // action type src
     char menu[] = "-- Smart Home application --\n"
@@ -66,9 +116,9 @@ void ServerApp::TransferLoop() {
         "- list [rooms/devices/sensors/room_pool/device_pool/sensor_pool] [-/room#/device#/sensor#]\n"
         "- create [room/device_*/sensor_*]\n";
     
-    bytes_sent = send(client_socket_(), menu, strlen(menu), 0);
+    bytes_sent = send(client_socket(), menu, strlen(menu), 0);
     do {
-        bytes_received = recv(client_socket_(), buffer_recv, sizeof(buffer_recv), 0);
+        bytes_received = recv(client_socket(), buffer_recv, sizeof(buffer_recv), 0);
         if (bytes_received == -1) {
             throw std::runtime_error("Failed receiving data from client!");
         }
@@ -76,6 +126,15 @@ void ServerApp::TransferLoop() {
             throw std::runtime_error("Connection closed by the client!");
         }
         buffer_recv[bytes_received] = '\0';
+
+        std::string client_response = buffer_recv;
+        Message client_message;
+        std::stringstream iss(client_response);
+        {
+            boost::archive::text_iarchive in_archive(iss);
+            in_archive >> client_message;
+        }
+        LogMessage(client_message);
 
         std::string client_request = buffer_recv;
         std::stringstream client_stream(client_request);
@@ -102,16 +161,25 @@ void ServerApp::TransferLoop() {
         std::string response = response_stream.str() + std::string(menu);
         strcpy(buffer_send, response.c_str());
 
-        bytes_sent = send(client_socket_(), buffer_send, strlen(buffer_send), 0);
+        bytes_sent = send(client_socket(), buffer_send, strlen(buffer_send), 0);
         int send_tries = 2;
         while (bytes_sent == -1 && send_tries > 0) {
             throw std::runtime_error("Error sending back data to client! Trying again...");
-            bytes_sent = send(client_socket_(), buffer_send, strlen(buffer_send), 0);
+            bytes_sent = send(client_socket(), buffer_send, strlen(buffer_send), 0);
             send_tries--;
         }
 
     } while (bytes_received > 0);
 };
+
+void ServerApp::LogMessage(Message& message) {
+    std::ofstream file_log(log_file_name_, std::ios::app);
+    if (!file_log.is_open()) {
+        throw std::runtime_error("Error while appending to the log file!");
+    }
+    file_log << message.GetServerLogFormat();
+};
+
 
 std::map<std::string, int> ParseToken(std::string token) {
     std::map<std::string, int> parse_result;

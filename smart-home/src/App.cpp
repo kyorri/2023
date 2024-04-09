@@ -20,7 +20,7 @@ App::App(const int& argc, const char* const* argv) {
             if (argc == 3) {
                 port = atoi(argv[2]);
             }
-            ServerApp app(port);
+            ServerApp app(port, 10);
         }
         else {
             throw std::invalid_argument("Wrong application specifier! (client/server)");
